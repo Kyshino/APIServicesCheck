@@ -33,7 +33,7 @@ const isRunningDocker = (containerName, cb) => {
 
     exec(cmd, (err, stdout, stderr) => {
         console.log(stdout);
-        cb(stdout.toLowerCase());
+        cb(stdout.toLowerCase().indexOf('id') > -1);
     });
 }
  

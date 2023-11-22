@@ -28,10 +28,8 @@ const isRunningService = (query, cb) => {
 
 const isRunningDocker = (containerName, cb) => {
     let cmd = `docker inspect --format='{{.State.Status}}' ${containerName}`;
-    console.log({a: 1, 'cmd': cmd});
     exec(cmd, (err, stdout, stderr) => {
-        console.log({out: stdout});
-        cb(stdout.toLowerCase() == 'running');
+        cb(stdout.toLowerCase().replace(/(\r\n|\n|\r)/gm, '') == 'running');
     });
 }
  

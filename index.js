@@ -5,6 +5,7 @@ const exec = require('child_process').exec;
 
 //Configuraciones
 app.set('port', process.env.PORT || 3005);
+app.set('host', process.env.HOST || '0.0.0.0');
 app.set('json spaces', 2)
  
 //Middleware

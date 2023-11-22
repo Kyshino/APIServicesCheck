@@ -27,8 +27,11 @@ const isRunning = (query, cb) => {
 }
  
 //Nuestro primer WS Get
-app.get('/earnapp', (req, res) => {    
-    isRunning('earnapp', (status) => {
+app.get('/service', (req, res) => {    
+    if (!req.query.service) {
+        res.json({message: 'You have to send ?service=serviceName to check correctly'});  
+    }
+    isRunning(req.query.service, (status) => {
         res.json(
             {
                 status: status
@@ -37,10 +40,20 @@ app.get('/earnapp', (req, res) => {
     });
 });
 
-app.get('/honeygain/claimer', (req, res) => {    
+app.get('/docker', (req, res) => {
+
+    if (!req.query.service) {
+        res.json({message: 'You have to send ?docker=containerName to check correctly'});  
+    }
+
+    var a = exec('docker ps -la', (err, stdout, stderr) => {
+        return stdout;
+    });
+    
+
     res.json(
         {
-            "Title": "Hola mundo"
+            a: a
         }
     );
 })

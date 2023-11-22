@@ -29,7 +29,11 @@ const isRunning = (query, cb) => {
 //Nuestro primer WS Get
 app.get('/earnapp', (req, res) => {    
     isRunning('earnapp', (status) => {
-        return status;
+        res.json(
+            {
+                status: status
+            }
+        );
     });
 });
 

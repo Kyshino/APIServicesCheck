@@ -12,7 +12,7 @@ app.use(morgan('dev'));
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
-const isRunning = (query, cb) => {
+const isRunning = (query, cb, docker = false) => {
     let platform = process.platform;
     let cmd = '';
     switch (platform) {
@@ -21,7 +21,10 @@ const isRunning = (query, cb) => {
         case 'linux' : cmd = `ps -A`; break;
         default: break;
     }
+
+    cmd = (docker) ? 'docker ps' : cmd;
     exec(cmd, (err, stdout, stderr) => {
+        console.log(stdout.toLowerCase());
         cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
     });
 }
@@ -32,30 +35,19 @@ app.get('/service', (req, res) => {
         res.json({message: 'You have to send ?service=serviceName to check correctly'});  
     }
     isRunning(req.query.service, (status) => {
-        res.json(
-            {
-                status: status
-            }
-        );
+        res.json( { status: status } );
     });
 });
 
 app.get('/docker', (req, res) => {
 
-    if (!req.query.service) {
+    if (!req.query.docker) {
         res.json({message: 'You have to send ?docker=containerName to check correctly'});  
     }
 
-    var a = exec('docker ps -la', (err, stdout, stderr) => {
-        return stdout;
+    isRunning(req.query.docker, (status) => {
+        res.json( { status: status } );
     });
-    
-
-    res.json(
-        {
-            a: a
-        }
-    );
 })
  
 //Iniciando el servidor

@@ -13,27 +13,25 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
 const isRunningService = (query, cb) => {
-    let platform = process.platform;
-    let cmd = '';
-    switch (platform) {
+    let cmd = 'ps -A';
+    /*switch (process.platform) {
         case 'win32' : cmd = `tasklist`; break;
         case 'darwin' : cmd = `ps -ax | grep ${query}`; break;
         case 'linux' : cmd = `ps -A`; break;
         default: break;
-    }
+    }*/
 
     exec(cmd, (err, stdout, stderr) => {
-        console.log(stdout.toLowerCase());
         cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
     });
 }
 
 const isRunningDocker = (containerName, cb) => {
-    let cmd = `docker container inspect ${containerName}`;
+    let cmd = `docker inspect --format='{{.State.Status}}' ${containerName}`;
 
     exec(cmd, (err, stdout, stderr) => {
         console.log(stdout);
-        cb(stdout.toLowerCase().indexOf('id') > -1);
+        cb(stdout.toLowerCase() == 'running');
     });
 }
  

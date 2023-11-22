@@ -20,7 +20,7 @@ const isRunningService = (query, cb) => {
         case 'linux' : cmd = `ps -A`; break;
         default: break;
     }*/
-
+    console.log({type: 'service', check: query});
     exec(cmd, (err, stdout, stderr) => {
         cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
     });
@@ -28,6 +28,7 @@ const isRunningService = (query, cb) => {
 
 const isRunningDocker = (containerName, cb) => {
     let cmd = `docker inspect --format='{{.State.Status}}' ${containerName}`;
+    console.log({type: 'docker', check: containerName});
     exec(cmd, (err, stdout, stderr) => {
         cb(stdout.toLowerCase().replace(/(\r\n|\n|\r)/gm, '') == 'running');
     });
